@@ -1,6 +1,14 @@
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "@/components/Footer";
@@ -26,14 +34,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#1F0528]`}
-      >
-        <Header />
-        <main className="bg-[#1F0528] bg-gradient-to-br from-[#1F0528] via-[#2D0B00] to-[#D44C02] min-h-screen">{children}</main>
-        <Footer />
-      </body>
-    </html>
+    <ClerkProvider afterSignOutUrl="/">
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#1F0528]`}
+        >
+          <Header />
+          <main className="bg-[#1F0528] bg-gradient-to-br from-[#1F0528] via-[#2D0B00] to-[#D44C02] min-h-screen">{children}</main>
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

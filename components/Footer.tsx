@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="flex items-center gap-3 mb-2">
             {/* Logo */}
             <div className="w-32 h-auto">
-              <Image src={Logo} alt="Daunnet Cinema School Logo" width={40} height={40} className="w-full h-full object-cover" quality={100} />
+              <Image src={Logo} alt="Daunnet Cinema School Logo" className="w-full h-full object-cover" quality={100} />
             </div>
           </div>
         </div>
