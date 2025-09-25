@@ -54,7 +54,7 @@ export default function FAQ({
         </div>
         
         {/* Optional Description */}
-        <div className="text-white/80 text-lg font-light text-center max-w-2xl mx-auto leading-relaxed">
+        <div className="text-white/80 text-lg font-light text-center mx-auto leading-relaxed">
           Temukan jawaban untuk pertanyaan yang paling sering ditanyakan seputar program kami
         </div>
       </div>

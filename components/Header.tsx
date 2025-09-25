@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import AuthButtons from "@/components/AuthButtons";
 import Logo from "@/public/logo.png"
+import { UserButton } from "./UserButton";
 export default function Header() {
 
   return (
@@ -10,20 +11,20 @@ export default function Header() {
       <div className="max-w-screen-xl mx-auto px-4  flex items-center justify-between h-20">
         {/* Logo */}
         <div className="flex items-center">
-          <Link href="#" className="block">
+          <Link href="/" className="block">
             <Image src={Logo} alt="Homepage"  className="h-12 w-auto drop-shadow-lg p-2" />
           </Link>
         </div>
         {/* Navigation */}
         <ul className="flex items-center gap-4">
           <li>
-            <Link href="/curriculum.html" rel="noopener noreferrer" className="text-white font-semibold text-base px-3 py-2 rounded-lg hover:bg-[#EE6028]/20 hover:text-[#EE6028] transition-colors">
+            <Link href="/course" rel="noopener noreferrer" className="text-white font-semibold text-base px-3 py-2 rounded-lg hover:bg-[#EE6028]/20 hover:text-[#EE6028] transition-colors">
               <span>Courses</span>
             </Link>
           </li>
           {/* User Dropdown */}
           <li className="relative">
-            <AuthButtons />
+            <UserButton />
           </li>
         </ul>
       </div>

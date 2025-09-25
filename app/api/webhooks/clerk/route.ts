@@ -23,7 +23,11 @@ export async function POST(req: Request) {
   const payload = await req.text();
 
   // Create a new Svix instance with your secret.
-  const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET || '');
+  if (!process.env.CLERK_WEBHOOK_SECRET) {
+    console.error('Missing CLERK_WEBHOOK_SECRET');
+    return new Response('Server misconfiguration', { status: 500 });
+  }
+  const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
   let evt: WebhookEvent;
 
@@ -43,13 +47,30 @@ export async function POST(req: Request) {
 
   // Handle the webhook
   const eventType = evt.type;
+  // Silently ignore email.* events (user.updated will carry authoritative email state)
+  if (eventType.startsWith('email.')) {
+    return new Response('Ignored email event', { status: 200 });
+  }
   
   try {
+    // Helper to pick primary email from Clerk user payload
+    const getPrimaryEmail = (e: WebhookEvent) => {
+      type EmailAddress = { id: string; email_address: string };
+      const data = e.data as {
+        primary_email_address_id?: string;
+        email_addresses?: EmailAddress[];
+      };
+      const primaryId = data.primary_email_address_id;
+      const emails = data.email_addresses ?? [];
+      const primary = primaryId ? emails.find((x) => x.id === primaryId)?.email_address : undefined;
+      return primary || emails[0]?.email_address || '';
+    };
+
     switch (eventType) {
       case 'user.created':
         await db.insert(users).values({
           clerkId: evt.data.id,
-          email: evt.data.email_addresses[0]?.email_address || '',
+          email: getPrimaryEmail(evt),
           firstName: evt.data.first_name || null,
           lastName: evt.data.last_name || null,
           imageUrl: evt.data.image_url || null,
@@ -60,7 +81,7 @@ export async function POST(req: Request) {
       case 'user.updated':
         await db.update(users)
           .set({
-            email: evt.data.email_addresses[0]?.email_address || '',
+            email: getPrimaryEmail(evt),
             firstName: evt.data.first_name || null,
             lastName: evt.data.last_name || null,
             imageUrl: evt.data.image_url || null,
@@ -76,7 +97,9 @@ export async function POST(req: Request) {
         break;
 
       default:
-        console.log(`Unhandled event type: ${eventType}`);
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`Ignored event type: ${eventType}`);
+        }
     }
 
     return new Response('Webhook processed successfully', { status: 200 });

@@ -29,7 +29,7 @@ export async function getOrCreateUser() {
       email: user.emailAddresses[0]?.emailAddress || '',
       firstName: user.firstName || null,
       lastName: user.lastName || null,
-      imageUrl: user.imageUrl || null,
+      phoneNumber: user.phoneNumbers[0]?.phoneNumber || null,
     })
     .returning();
 
