@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Important pages
+Allow: /course/
+Allow: /api/
+
+# Block admin and private areas
+Disallow: /admin/
+Disallow: /api/auth/
+Disallow: /api/webhook/
+
+# Sitemap location
+Sitemap: https://daunnetfilms.id/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
