@@ -1,4 +1,7 @@
 import { Metadata } from 'next';
+import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import RevalidationPanel from '@/components/RevalidationPanel';
 
 export const metadata: Metadata = {
@@ -7,10 +10,57 @@ export const metadata: Metadata = {
   robots: 'noindex, nofollow', // Prevent search engines from indexing admin pages
 };
 
-export default function AdminPage() {
+// List of authorized admin emails
+const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(',').map(email => email.trim()) || [
+  'zulzdn@gmail.com', // Fallback if env variable not set
+];
+
+export default async function AdminPage() {
+  // Get the current user from Clerk
+  const user = await currentUser();
+  
+  // Check if user is logged in
+  if (!user) {
+    redirect('/sign-in?redirect_url=/admin');
+  }
+
+  // Get user's email from Clerk
+  const userEmail = user.emailAddresses[0]?.emailAddress;
+
+  // Check if user's email is in the admin list
+  if (!userEmail || !ADMIN_EMAILS.includes(userEmail)) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#1F0528] to-[#2E0B25] flex items-center justify-center px-4">
+        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
+          <div className="text-6xl mb-4">🚫</div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Access Denied</h1>
+          <p className="text-gray-600 mb-6">
+            You don&apos;t have permission to access this page.
+          </p>
+          <p className="text-sm text-gray-500 mb-4">
+            Logged in as: <strong>{userEmail}</strong>
+          </p>
+          <Link
+            href="/"
+            className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-6 rounded-lg transition-colors"
+          >
+            Go to Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#1F0528] to-[#2E0B25] py-8 px-4">
       <div className="max-w-4xl mx-auto">
+        {/* Admin Badge */}
+        <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3 mb-6 text-center">
+          <p className="text-green-400 text-sm">
+            ✓ Logged in as admin: <strong>{userEmail}</strong>
+          </p>
+        </div>
+
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">
             🎬 Daunnet Films Admin
@@ -73,7 +123,7 @@ export default function AdminPage() {
             <div className="bg-gray-50 rounded-lg p-4">
               <h3 className="font-semibold text-gray-700 mb-2">Contentful Webhook URL:</h3>
               <code className="text-sm bg-gray-200 px-2 py-1 rounded">
-                {process.env.NEXT_PUBLIC_BASE_URL || 'https://your-domain.com'}/api/contentful-webhook
+                {process.env.NEXT_PUBLIC_BASE_URL || 'https://daunnetfilms.id'}/api/contentful-webhook
               </code>
               
               <div className="mt-4 text-sm text-gray-600">

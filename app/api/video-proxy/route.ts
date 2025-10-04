@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch the lesson to get the encrypted video URL
-    const lessonResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/contentful-lesson?slug=${lessonId}`);
+    const lessonResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://daunnetfilms.id'}/api/contentful-lesson?slug=${lessonId}`);
     
     if (!lessonResponse.ok) {
       return NextResponse.json({ error: 'Lesson not found' }, { status: 404 });

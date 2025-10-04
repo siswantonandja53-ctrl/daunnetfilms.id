@@ -23,7 +23,7 @@ lesson-{slug}        - Specific lesson by slug
 ### Automatic Revalidation (Webhooks)
 1. **Configure Contentful Webhook:**
    ```
-   URL: https://your-domain.com/api/contentful-webhook
+   URL: https://daunnetfilms.id/api/contentful-webhook
    Triggers: Entry publish, unpublish, delete
    Content types: Course, Lesson
    ```
@@ -35,7 +35,7 @@ lesson-{slug}        - Specific lesson by slug
 ### Manual Revalidation (Admin Panel)
 1. **Access Admin Panel:**
    ```
-   https://your-domain.com/admin
+   https://daunnetfilms.id/admin
    ```
 
 2. **Available Actions:**
@@ -86,7 +86,7 @@ CONTENTFUL_REVALIDATE_SECRET=your_secure_random_string
 NEXT_PUBLIC_REVALIDATE_SECRET=your_secure_random_string
 
 # Base URL for webhooks
-NEXT_PUBLIC_BASE_URL=https://your-domain.com
+NEXT_PUBLIC_BASE_URL=https://daunnetfilms.id
 ```
 
 ### Contentful Setup
@@ -110,10 +110,10 @@ NEXT_PUBLIC_BASE_URL=https://your-domain.com
 ### Debugging
 ```bash
 # Check if webhook is working
-curl https://your-domain.com/api/contentful-webhook
+curl https://daunnetfilms.id/api/contentful-webhook
 
 # Test manual revalidation
-curl "https://your-domain.com/api/revalidate?tag=courses&secret=YOUR_SECRET"
+curl "https://daunnetfilms.id/api/revalidate?tag=courses&secret=YOUR_SECRET"
 ```
 
 ### Logs
